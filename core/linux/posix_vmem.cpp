@@ -120,7 +120,7 @@ static int allocate_shared_filemem(unsigned size) {
 	// Use Android's specific shmem stuff.
 	fd = ashmem_create_region("RAM", size);
 #else
-	#if !defined(__APPLE__)
+	#if !defined(__APPLE__) && !defined(__redox__)
 		fd = shm_open("/dcnzorz_mem", O_CREAT | O_EXCL | O_RDWR, S_IREAD | S_IWRITE);
 		shm_unlink("/dcnzorz_mem");
 	#endif
@@ -216,12 +216,14 @@ void vmem_platform_destroy()
 void vmem_platform_reset_mem(void *ptr, unsigned size_bytes) {
 	// Mark them as non accessible.
 	mprotect(ptr, size_bytes, PROT_NONE);
+	#if !defined(__redox__)
 	// Tell the kernel to flush'em all (FIXME: perhaps unmap+mmap 'd be better?)
 	madvise(ptr, size_bytes, MADV_DONTNEED);
 	#if defined(MADV_REMOVE)
 	madvise(ptr, size_bytes, MADV_REMOVE);
 	#elif defined(MADV_FREE)
 	madvise(ptr, size_bytes, MADV_FREE);
+	#endif
 	#endif
 }
 

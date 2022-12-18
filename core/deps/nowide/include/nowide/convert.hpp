@@ -118,6 +118,7 @@ namespace nowide {
     {
         return nowide::conv::utf_to_utf<char>(s);
     }
+#if !defined(__redox__)
     ///
     /// Convert between UTF-8 and UTF-16 string, implemented only on Windows platform
     ///
@@ -145,7 +146,7 @@ namespace nowide {
     {
         return nowide::conv::utf_to_utf<wchar_t>(s);
     }
-
+#endif
 } // nowide
 
 

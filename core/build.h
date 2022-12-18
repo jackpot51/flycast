@@ -227,6 +227,9 @@
 #endif
 #endif
 
+#if defined(__redox__)
+#define TARGET_NO_EXCEPTIONS
+#endif
 
 #if !defined(LIBRETRO) && !defined(TARGET_NO_EXCEPTIONS)
 #define USE_GGPO
