@@ -783,7 +783,10 @@ void BaseTextureCacheData::Update()
 	height = original_h;
 
 	//lock the texture to detect changes in it
+// TODO: No SIGSEGV handler on redox
+#if !defined(__redox__)
 	protectVRam();
+#endif
 
 	UploadToGPU(upscaled_w, upscaled_h, (const u8 *)temp_tex_buffer, IsMipmapped(), mipmapped);
 	if (config::DumpTextures)
