@@ -107,6 +107,26 @@ static GL3WglProc get_proc(const char *proc)
 {
 	return (GL3WglProc)eglGetProcAddress(proc);
 }
+#elif defined(__redox__)
+#include <SDL.h>
+
+static int open_libgl(void)
+{
+	if (SDL_GL_LoadLibrary(NULL) < 0)
+		return GL3W_ERROR_LIBRARY_OPEN;
+
+	return GL3W_OK;
+}
+
+static void close_libgl(void)
+{
+	SDL_GL_UnloadLibrary();
+}
+
+static GL3WglProc get_proc(const char *proc)
+{
+	return (GL3WglProc)SDL_GL_GetProcAddress(proc);
+}
 #else
 #include <dlfcn.h>
 
